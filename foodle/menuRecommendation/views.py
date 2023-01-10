@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
 from menuRecommendation.models import Menu
-from menuRecommendation.serializers import MenuSerializer
+from menuRecommendation.serializers import MenuSerializer, BannedMenuSerializer
 from menuRecommendation.tasteClassifier import sentence_analyze
-from django.views import View
+from rest_framework.views import APIView 
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi      
 import json
 
 # Create your views here.
@@ -25,13 +27,22 @@ def menu_list(request):
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
-class AnswerView(View):
-    def get(self, request):
-        sentence = request.GET.get('query', None)
+class AnswerView(APIView):
+
+    sentence = openapi.Parameter('sentence', openapi.IN_QUERY, description='사용자가 입력한 문장', required=True, type=openapi.TYPE_STRING)
+    is_soup = openapi.Parameter('is_soup', openapi.IN_QUERY, description='국물 여부', required=True, type=openapi.TYPE_BOOLEAN)
+
+    @swagger_auto_schema(tags=['지정한 데이터의 상세 정보를 불러옵니다.'], manual_parameters=[sentence, is_soup], request_body=BannedMenuSerializer, responses={200: 'Success'})
+
+    def post(self, request):
+        sentence = request.GET.get('sentence', None)
         is_soup = request.GET.get('is_soup', False)
+        if is_soup == "true":
+            is_soup = True
+        else:
+            is_soup = False
         data = json.loads(request.body)
-        except_menus = data['except']
-        print(except_menus)
+        except_menus = data['ban']
         flavor_weight = sentence_analyze(sentence)
 
         query_set = Menu.objects.filter(soup = is_soup)
