@@ -48,38 +48,38 @@ class AnswerView(APIView):
         flavor_weight = sentence_analyze(sentence)
 
         query_set = Menu.objects.filter(soup = is_soup)
-        if len(no_nations) != 4:
-            if "한식" in no_nations:
+        if len(no_nations) != 0:
+            if 0 not in no_nations:
                 query_set.exclude(nation = "한식")
-            if "중식" in no_nations:
+            if 1 not in no_nations:
                 query_set.exclude(nation = "중식")
-            if "일식" in no_nations:
+            if 2 not in no_nations:
                 query_set.exclude(nation = "일식")
-            if "양식" in no_nations:
+            if 3 not in no_nations:
                 query_set.exclude(nation = "양식")
         
-        if len(etc) == 1:
-            if etc == ["고기"]:
+        if sum(etc) == 1:
+            if etc[0]:
                 query_set.filter(meat = 1)
-            if etc == ["면류"]:
+            if etc[2]:
                 query_set.filter(noodle = 1)
-            if etc == ["밥류"]:  
+            if etc[1]:
                 query_set.filter(rice = 1)
-        elif len(etc) == 2:
-            if etc == ["고기", "면류"]:
+        elif sum(etc) == 2:
+            if etc[0] and etc[2]:
                 a = query_set.filter(meat = 1)
                 b = query_set.filter(noodle = 1)
                 query_set = a | b
-            if etc == ["고기", "밥류"]:
+            if etc[0] and etc[1]:
                 a = query_set.filter(meat = 1)
                 b = query_set.filter(rice = 1)
                 query_set = a | b
-            if etc == ["면류", "밥류"]:
+            if etc[1] and etc[2]:
                 a = query_set.filter(noodle = 1)
                 b = query_set.filter(rice = 1)
                 query_set = a | b
 
-        elif len(etc) == 3:
+        elif sum(etc) == 3:
             a = query_set.filter(meat = 1)
             b = query_set.filter(rice = 1)
             c = query_set.filter(noodle = 1)
