@@ -7,6 +7,6 @@ class MenuSerializer(serializers.ModelSerializer) :
         fields = ['name']
 
 class BannedMenuSerializer(serializers.Serializer):
-    ban = serializers.ListField(help_text="싫어하는 메뉴")
-    nation = serializers.ListField(help_text="국가")
-    etc = serializers.ListField(help_text="기타")
+    ban = serializers.CharField(help_text="싫어하는 메뉴")
+    nation = serializers.CharField(help_text="국가")
+    etc = serializers.CharField(help_text="기타")
