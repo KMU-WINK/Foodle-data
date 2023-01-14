@@ -24,6 +24,7 @@ Jinja2==3.1.2
 MarkupSafe==2.1.1
 mysqlclient==2.1.1
 packaging==23.0
+py-hanspell==1.1
 pytz==2022.7
 requests==2.28.1
 rfc3986==1.5.0
