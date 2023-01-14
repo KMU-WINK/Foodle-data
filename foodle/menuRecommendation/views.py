@@ -57,13 +57,33 @@ class AnswerView(APIView):
                 query_set.exclude(nation = "일식")
             if "양식" in no_nations:
                 query_set.exclude(nation = "양식")
+        
+        if len(etc) == 1:
+            if etc == ["고기"]:
+                query_set.filter(meat = 1)
+            if etc == ["면류"]:
+                query_set.filter(noodle = 1)
+            if etc == ["밥류"]:  
+                query_set.filter(rice = 1)
+        elif len(etc) == 2:
+            if etc == ["고기", "면류"]:
+                a = query_set.filter(meat = 1)
+                b = query_set.filter(noodle = 1)
+                query_set = a | b
+            if etc == ["고기", "밥류"]:
+                a = query_set.filter(meat = 1)
+                b = query_set.filter(rice = 1)
+                query_set = a | b
+            if etc == ["면류", "밥류"]:
+                a = query_set.filter(noodle = 1)
+                b = query_set.filter(rice = 1)
+                query_set = a | b
 
-        if "고기" in etc:
-            query_set.filter(meat = 1)
-        if "밥류" in etc:
-            query_set.filter(rice = 1)
-        if "면류" in etc:
-            query_set.filter(noodle = 1)
+        elif len(etc) == 3:
+            a = query_set.filter(meat = 1)
+            b = query_set.filter(rice = 1)
+            c = query_set.filter(noodle = 1)
+            query_set = a | b | c
 
         menu_score = []
         for menu in query_set:
