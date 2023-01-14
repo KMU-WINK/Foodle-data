@@ -43,9 +43,28 @@ class AnswerView(APIView):
             is_soup = False
         data = json.loads(request.body)
         except_menus = data['ban']
+        no_nations = data['nation']
+        etc = data['etc']
         flavor_weight = sentence_analyze(sentence)
 
         query_set = Menu.objects.filter(soup = is_soup)
+        if len(no_nations) != 4:
+            if "한식" in no_nations:
+                query_set.exclude(nation = "한식")
+            if "중식" in no_nations:
+                query_set.exclude(nation = "중식")
+            if "일식" in no_nations:
+                query_set.exclude(nation = "일식")
+            if "양식" in no_nations:
+                query_set.exclude(nation = "양식")
+
+        if "고기" in etc:
+            query_set.filter(meat = 1)
+        if "밥류" in etc:
+            query_set.filter(rice = 1)
+        if "면류" in etc:
+            query_set.filter(noodle = 1)
+
         menu_score = []
         for menu in query_set:
             if menu.name not in except_menus:
