@@ -43,8 +43,8 @@ class AnswerView(APIView):
             is_soup = False
         data = json.loads(request.body)
         except_menus = data['ban']
-        no_nations = data['nation']
-        etc = data['etc']
+        no_nations = data['nation'].split(",")
+        etc = data['etc'].split(",")
         flavor_weight = sentence_analyze(sentence)
 
         query_set = Menu.objects.filter(soup = is_soup)
