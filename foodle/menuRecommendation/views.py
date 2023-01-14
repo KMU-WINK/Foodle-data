@@ -42,7 +42,7 @@ class AnswerView(APIView):
         else:
             is_soup = False
         data = json.loads(request.body)
-        except_menus = data['ban']
+        except_menus = data['ban'].split(",")
         no_nations = data['nation'].split(",")
         etc = data['etc'].split(",")
         flavor_weight = sentence_analyze(sentence)
